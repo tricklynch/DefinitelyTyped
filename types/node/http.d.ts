@@ -2,7 +2,7 @@ declare module "http" {
     import * as events from "events";
     import * as stream from "stream";
     import { URL } from "url";
-    import { Socket, Server as NetServer } from "net";
+    import { Socket, Server as NetServer, NetConnectOpts } from "net";
 
     // incoming headers will never contain number
     interface IncomingHttpHeaders {
@@ -366,6 +366,15 @@ declare module "http" {
         };
 
         constructor(opts?: AgentOptions);
+
+        createConnection(): Socket;
+        createConnection(opts: NetConnectOpts, callback?: () => void): Socket;
+        createConnection(path: string, callback?: () => void): Socket;
+        createConnection(port: number, host?: string, callback?: () => void): Socket;
+
+        getName(options?: {host?: string, port?: number, localAdress?: string, family?: number, socketPath?: string}): string;
+        keepSocketAlive(socket: stream.Duplex): boolean;
+        reuseSocket(socket: stream.Duplex, request: ClientRequest): void;
 
         /**
          * Destroy any sockets that are currently in use by the agent.
